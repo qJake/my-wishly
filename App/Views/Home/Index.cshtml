@@ -1,0 +1,26 @@
+﻿<div class="container col-xxl-8 px-4 py-5">
+    @if (ViewBag.ShowRegisterMessage is bool b && b)
+    {
+        <div class="row align-items-center">
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <i class="bi flex-shrink-0 me-2 fas fa-check-circle fa-lg"></i>
+                <div>
+                    <strong>Registered successfully!</strong> Please check your e-mail in order to verify your e-mail address, and then you can log in!
+                </div>
+            </div>
+        </div>
+    }
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+        <div class="col-10 col-sm-8 col-lg-6">
+            <img src="" class="d-block mx-lg-auto img-fluid" width="700" height="500" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3">A simple, free, easy to use wishlist page.</h1>
+            <p class="lead">Build your own wishlist using links from a number of online stores, or create and customize your own entries.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a asp-action="Register" class="btn btn-primary btn-lg px-4 me-md-2">Get Started</a>
+                <a asp-action="Example" class="btn btn-outline-secondary btn-lg px-4">See an Example</a>
+            </div>
+        </div>
+    </div>
+</div>

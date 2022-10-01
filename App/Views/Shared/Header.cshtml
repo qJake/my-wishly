@@ -1,0 +1,28 @@
+﻿<header class="p-3 text-bg-dark">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                <img src="~/images/logo.svg" alt="My Wishly Logo" height="36" />
+            </a>
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li><span class="fs-4 px-4">My Wishly</span></li>
+                <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
+            </ul>
+
+            <div class="text-end">
+                @if (User.Identity?.IsAuthenticated ?? false)
+                {
+                    <span>Hi, @User.Identity.Name!</span>
+                    <a asp-action="Index" asp-controller="Dashboard" class="btn btn-primary ms-2">View Dashboard</a>
+                }
+                else
+                {
+                    <a asp-action="Login" class="btn btn-outline-light me-2">Login</a>
+                    <a asp-action="Register" class="btn btn-primary">Register</a>
+                }
+            </div>
+        </div>
+    </div>
+</header>
