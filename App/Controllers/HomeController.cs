@@ -93,7 +93,8 @@ namespace MyWishly.App.Controllers
             {
                 new Claim(ClaimTypes.Upn, user.Email!),
                 new Claim(ClaimTypes.Email, user.Email!),
-                new Claim(ClaimTypes.Name, user.Name!)
+                new Claim(ClaimTypes.Name, user.Name!),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

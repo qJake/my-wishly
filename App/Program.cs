@@ -1,16 +1,12 @@
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.AspNetCore.Server.HttpSys;
 using MyWishly.App.Models.Options;
 using MyWishly.App.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Host.ConfigureAppConfiguration(b =>
 {
-    //Connect to your App Config Store using the connection string
     b.AddAzureAppConfiguration(builder.Configuration.GetConnectionString("AppConfig"));
 });
 
@@ -22,6 +18,8 @@ builder.Services.AddAzureAppConfiguration();
 
 builder.Services.AddSingleton<ICryptographyService, CryptographyService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddSingleton<IItemsService, ItemsService>();
+builder.Services.AddSingleton<IImageService, ImageService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
@@ -52,11 +50,9 @@ app.UseCookiePolicy(new CookiePolicyOptions
     MinimumSameSitePolicy = SameSiteMode.Strict
 });
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 else

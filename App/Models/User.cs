@@ -11,6 +11,8 @@ namespace MyWishly.App.Models
         public string? RowKey { get; set; }
 
         public string? Name { get; set; }
+        public Guid UserId { get; set; }
+        public string? FriendlyUrl { get; set; }
         public string? Email { get => RowKey; set => RowKey = value; }
         public string? PasswordHash { get; set; }
         public bool IsVerified { get; set; }

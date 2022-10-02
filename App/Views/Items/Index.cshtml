@@ -1,0 +1,95 @@
+﻿@model IEnumerable<Item>
+
+@{
+    ViewBag.Title = "My Items | Wishly";
+}
+
+<h2>My Items</h2>
+
+@if (ViewBag.NewItemName is string s)
+{
+    <div class="alert alert-success" role="alert">
+        <i class="fas fa-check-circle fa-lg fa-fw"></i>
+        <strong>Success!</strong> Added item "@s".
+    </div>
+}
+@if (ViewBag.UpdatedItemName is string u)
+{
+    <div class="alert alert-success" role="alert">
+        <i class="fas fa-check-circle fa-lg fa-fw"></i>
+        <strong>Success!</strong> Updated item "@u".
+    </div>
+}
+@if (ViewBag.ItemNotFound is bool b && b)
+{
+    <div class="alert alert-warning" role="alert">
+        <i class="fas fa-triangle-exclamation fa-lg fa-fw"></i>
+        <strong>Oh no!</strong> We were not able to find the item you requested.
+    </div>
+}
+@if (ViewBag.DeleteSuccess is bool b2 && b2)
+{
+    <div class="alert alert-success" role="alert">
+        <i class="fas fa-check-circle fa-lg fa-fw"></i>
+        <strong>All done!</strong> That item has been deleted.
+    </div>
+}
+@if (ViewBag.DeleteFailed is bool b3 && b3)
+{
+    <div class="alert alert-danger" role="alert">
+        <i class="fas fa-times-circle fa-lg fa-fw"></i>
+        <strong>Oh no!</strong> We couldn't delete that item due to an error. Sorry about that!
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <p>Oh no! You don't have anything on your wishlist at this time.</p>
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create Your First Item</a>
+    </p>
+}
+else
+{
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus fa-fw"></i>
+            New Item
+        </a>
+    </p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Primary Link</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="align-middle">
+                        <img class="img-fluid" style="max-height: 48px;" src="@item.ImageUrl" alt="@item.Name product image" />
+                    </td>
+                    <td class="align-middle">@item.Name</td>
+                    <td class="align-middle">@item.Price.ToString("C2")</td>
+                    <td class="align-middle">@item.PrimaryBuyLink</td>
+                    <td class="align-middle">
+                        <a asp-action="Edit" asp-route-itemId="@item.ItemId" class="btn btn-warning">
+                            <i class="fas fa-pencil fa-fw"></i>
+                            Edit
+                        </a>
+                        <a asp-action="Delete" asp-route-itemId="@item.ItemId" class="btn btn-danger">
+                            <i class="fas fa-trash fa-fw"></i>
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

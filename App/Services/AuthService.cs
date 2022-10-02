@@ -1,9 +1,9 @@
-﻿using Azure.Data.Tables;
+﻿using Azure;
+using Azure.Data.Tables;
 using Microsoft.Extensions.Options;
 using MyWishly.App.Models;
 using MyWishly.App.Models.Options;
 using MyWishly.App.Models.Exceptions;
-using Azure;
 
 namespace MyWishly.App.Services
 {
@@ -17,7 +17,7 @@ namespace MyWishly.App.Services
         {
             Connections = connections.Value;
             TableServiceClient = new TableServiceClient(Connections.Storage);
-            TableClient = TableServiceClient.GetTableClient(Connections.StorageTableName);
+            TableClient = TableServiceClient.GetTableClient(Connections.TableNameUsers);
             TableClient.CreateIfNotExists();
         }
 
@@ -27,6 +27,7 @@ namespace MyWishly.App.Services
             newUser.CreatedUtc = DateTimeOffset.Now;
             newUser.RowKey = newUser.RowKey!.Trim().ToLower();
             newUser.IsVerified = false;
+            newUser.UserId = Guid.NewGuid();
 
             await TableClient.AddEntityAsync(newUser);
         }
@@ -41,6 +42,19 @@ namespace MyWishly.App.Services
             catch (RequestFailedException rex) when (rex.Status == 404)
             {
                 throw new UserNotFoundException(email);
+            }
+        }
+
+        public async Task<User> GetUser(Guid userId)
+        {
+            try
+            {
+                var resp = await TableClient.QueryAsync<User>(filter: TableClient.CreateQueryFilter($"PartitionKey eq {User.PARTITION_KEY} and UserId eq {userId}"), maxPerPage: 1).FirstOrDefaultAsync();
+                return resp != null ? resp : throw new UserNotFoundException(userId.ToString());
+            }
+            catch (RequestFailedException rex) when (rex.Status == 404)
+            {
+                throw new UserNotFoundException(userId.ToString());
             }
         }
     }
