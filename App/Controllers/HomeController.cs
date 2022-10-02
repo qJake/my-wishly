@@ -18,13 +18,15 @@ namespace MyWishly.App.Controllers
         public ICryptographyService CryptographyService { get; }
         public IItemsService ItemsService { get; }
         public IMailService MailService { get; }
+        public ISettingsService SettingsService { get; }
 
-        public HomeController(IAuthService authenticationService, ICryptographyService cryptographyService, IItemsService itemsService, IMailService mailService)
+        public HomeController(IAuthService authenticationService, ICryptographyService cryptographyService, IItemsService itemsService, IMailService mailService, ISettingsService settingsService)
         {
             AuthenticationService = authenticationService;
             CryptographyService = cryptographyService;
             ItemsService = itemsService;
             MailService = mailService;
+            SettingsService = settingsService;
         }
 
         public IActionResult Index()
@@ -45,6 +47,31 @@ namespace MyWishly.App.Controllers
                 {
                     ViewBag.BuySuccess = s;
                 }
+                var user = await AuthenticationService.GetUser(userId);
+                var items = await ItemsService.GetItemsForUser(userId);
+                return View((user, items.Where(i => !i.IsHidden)));
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
+        }
+
+        [Route(@"/l/{friendlyUrl:regex(^[[a-zA-Z0-9_-]]{{3,25}}$)}")]
+        public async Task<IActionResult> List(string friendlyUrl)
+        {
+            try
+            {
+                if (TempData["BuySuccess"] is string s)
+                {
+                    ViewBag.BuySuccess = s;
+                }
+                var friendly = await SettingsService.GetFriendlyUrl(friendlyUrl);
+                if (friendly is null)
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                var userId = Guid.Parse(friendly.RowKey!);
                 var user = await AuthenticationService.GetUser(userId);
                 var items = await ItemsService.GetItemsForUser(userId);
                 return View((user, items.Where(i => !i.IsHidden)));

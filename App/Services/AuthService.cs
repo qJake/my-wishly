@@ -39,7 +39,7 @@ namespace MyWishly.App.Services
             try
             {
                 var resp = await TableClient.GetEntityAsync<User>(User.PARTITION_KEY, email.ToLower().Trim());
-                return resp.Value != null ? resp.Value : throw new UserNotFoundException(email);
+                return resp.Value ?? throw new UserNotFoundException(email);
             }
             catch (RequestFailedException rex) when (rex.Status == 404)
             {
@@ -65,7 +65,7 @@ namespace MyWishly.App.Services
             try
             {
                 var resp = await TableClient.QueryAsync<User>(filter: TableClient.CreateQueryFilter($"PartitionKey eq {User.PARTITION_KEY} and UserId eq {userId}"), maxPerPage: 1).FirstOrDefaultAsync();
-                return resp != null ? resp : throw new UserNotFoundException(userId.ToString());
+                return resp ?? throw new UserNotFoundException(userId.ToString());
             }
             catch (RequestFailedException rex) when (rex.Status == 404)
             {

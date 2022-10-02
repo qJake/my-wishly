@@ -4,6 +4,7 @@
 @{
     Layout = "_LayoutEmpty";
     ViewBag.BodyClass = "bg-light";
+    ViewBag.Title = Model.Item1.Name + "'s Wishlist on My Wishly";
     var selfVisit = Model.Item1.UserId.ToString() == User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 

@@ -1,0 +1,36 @@
+﻿@model SettingsViewModel
+
+@{
+    ViewBag.Title = "Settings | My Wishly";
+}
+
+<div class="pagetitle">
+    <h1>Settings</h1>
+</div>
+
+@if (ViewBag.SettingsSaved is bool b && b)
+{
+    <div class="alert alert-success" role="alert">
+        <i class="fas fa-check-circle fa-lg fa-fw"></i>
+        <strong>Success!</strong> Your settings have been saved.
+    </div>
+}
+
+<form asp-action="Save" method="post" asp-antiforgery="true">
+    <div class="row">
+        <div class="col-xs-12 col-md-8 col-lg-6">
+            <label asp-for="FriendlyUrl"></label>
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="basic-addon3">https://wishly.site/l/</span>
+                <input asp-for="FriendlyUrl" class="form-control">
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check"></i>
+                    Save Settings
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

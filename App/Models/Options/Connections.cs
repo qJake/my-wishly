@@ -7,6 +7,7 @@
         public string? TableNameItems { get; set; }
         public string? TableNameArrangement { get; set; }
         public string? TableNameThemes { get; set; }
+        public string? TableNameSettings { get; set; }
         public string? ContainerNameProductImages { get; set; }
     }
 }

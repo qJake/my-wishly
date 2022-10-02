@@ -28,6 +28,7 @@ builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<IItemsService, ItemsService>();
 builder.Services.AddSingleton<IImageService, ImageService>();
 builder.Services.AddSingleton<IMailService, MailService>();
+builder.Services.AddSingleton<ISettingsService, SettingsService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
