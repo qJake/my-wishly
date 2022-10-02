@@ -13,6 +13,7 @@ namespace MyWishly.App.Models
         public Guid UserId { get => PartitionKey is null ? Guid.Empty : Guid.Parse(PartitionKey); set => PartitionKey = value.ToString(); }
         public Guid ItemId { get => RowKey is null ? Guid.Empty : Guid.Parse(RowKey); set => RowKey = value.ToString(); }
         public string? Name { get; set; }
+        public int Order { get; set; }
         public double Price { get; set; }
         public double PriceMax { get; set; }
         public bool IsHidden { get; set; }

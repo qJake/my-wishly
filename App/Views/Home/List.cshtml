@@ -26,7 +26,7 @@
     }
     else
     {
-        @foreach (var item in Model.Item2.Where(i => !i.IsBought || selfVisit))
+        @foreach (var item in Model.Item2.OrderBy(i => i.Order).Where(i => !i.IsBought || selfVisit))
         {
             <div class="row mb-5 shadow rounded p-3 bg-white">
                 <div class="col-6 d-flex justify-content-center">

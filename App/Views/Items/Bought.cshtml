@@ -41,7 +41,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.OrderBy(i => i.Order))
             {
                 <tr>
                     <td class="align-middle text-center">
