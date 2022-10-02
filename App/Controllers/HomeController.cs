@@ -16,11 +16,13 @@ namespace MyWishly.App.Controllers
     {
         public IAuthService AuthenticationService { get; }
         public ICryptographyService CryptographyService { get; }
+        public IItemsService ItemsService { get; }
 
-        public HomeController(IAuthService authenticationService, ICryptographyService cryptographyService)
+        public HomeController(IAuthService authenticationService, ICryptographyService cryptographyService, IItemsService itemsService)
         {
             AuthenticationService = authenticationService;
             CryptographyService = cryptographyService;
+            ItemsService = itemsService;
         }
 
         public IActionResult Index()
@@ -30,6 +32,21 @@ namespace MyWishly.App.Controllers
                 ViewBag.ShowRegisterMessage = true;
             }
             return View();
+        }
+
+        [Route("/{userId:guid}")]
+        public async Task<IActionResult> List(Guid userId)
+        {
+            try
+            {
+                var user = await AuthenticationService.GetUser(userId);
+                var items = await ItemsService.GetItemsForUser(userId);
+                return View((user, items));
+            }
+            catch
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         public IActionResult Login()

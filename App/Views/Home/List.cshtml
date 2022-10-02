@@ -1,0 +1,38 @@
+﻿@model (MyWishly.App.Models.User, IEnumerable<Item>)
+
+@{
+    Layout = "_LayoutEmpty";
+}
+
+<div class="container-lg">
+    <h1 class="text-center my-5">@(Model.Item1.Name)'s Wishlist</h1>
+
+    @if (!Model.Item2.Any())
+    {
+        <h3 class="text-center">There are no items currently on this wishlist.</h3>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            @foreach (var item in Model.Item2)
+            {
+                <div class="col">
+                    <div class="card">
+                        <img src="@item.ImageUrl" alt="@item.Name product image" class="img-fluid" />
+                        <div class="card-body">
+                            <h5>@item.Name</h5>
+                            <p>@item.Description</p>
+                        </div>
+                        <div class="card-footer">
+                            <span class="text-muted align-middle">@item.Price.ToString("C2")</span>
+                            <a class="btn btn-success float-end" href="@item.PrimaryBuyLink" rel="nofollow" target="_blank">
+                                Buy
+                                <i class="fas fa-arrow-right fa-fw"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

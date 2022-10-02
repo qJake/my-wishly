@@ -1,9 +1,10 @@
 ﻿@model ItemViewModel
 @{
-    ViewBag.Title = "Add New Item | My Wishly";
+    ViewBag.Title = "Edit Item | My Wishly";
 }
-
-<h2 class="mb-4">Edit Item: @Model.Name</h2>
+<div class="pagetitle">
+    <h1>Edit Item: @Model.Name</h1>
+</div>
 
 <form asp-action="Edit" method="post" asp-antiforgery="true" enctype="multipart/form-data" asp-route-itemId="@ViewBag.ItemId">
     <div class="row">

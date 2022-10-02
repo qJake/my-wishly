@@ -1,0 +1,10 @@
+@using System.Security.Claims
+<div class="pagetitle">
+    <h1>Wishlist Dashboard</h1>
+</div>
+<p>
+    <a href="/@User.FindFirstValue(ClaimTypes.NameIdentifier)" class="btn btn-primary">
+        View Your Public Wishlist
+        <i class="fas fa-external-link fa-fw"></i>
+    </a>
+</p>
