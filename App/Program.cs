@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using MyWishly.App.Models.Options;
 using MyWishly.App.Services;
 
@@ -7,7 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureAppConfiguration(b =>
 {
-    b.AddAzureAppConfiguration(builder.Configuration.GetConnectionString("AppConfig"));
+    b.AddAzureAppConfiguration(options =>
+    {
+        options.Connect(builder.Configuration.GetConnectionString("AppConfig"))
+               .Select(KeyFilter.Any, LabelFilter.Null)
+               .Select(KeyFilter.Any, builder.Environment.EnvironmentName);
+    });
 });
 
 builder.Services.AddOptions();

@@ -41,6 +41,10 @@ namespace MyWishly.App.Controllers
         {
             try
             {
+                if (TempData["BuySuccess"] is string s)
+                {
+                    ViewBag.BuySuccess = s;
+                }
                 var user = await AuthenticationService.GetUser(userId);
                 var items = await ItemsService.GetItemsForUser(userId);
                 return View((user, items.Where(i => !i.IsHidden)));
@@ -49,6 +53,22 @@ namespace MyWishly.App.Controllers
             {
                 return RedirectToAction("Index");
             }
+        }
+
+        [Route("/bought/{userId:guid}/{itemId:guid}")]
+        public async Task<IActionResult> BuyItem(Guid userId, Guid itemId)
+        {
+            var item = await ItemsService.GetItem(userId, itemId);
+            if (item is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            item.IsBought = true;
+            item.BoughtByIp = HttpContext.Connection.RemoteIpAddress?.ToString();
+            item.BoughtTimeUtc = DateTimeOffset.UtcNow;
+            await ItemsService.UpdateItem(item);
+            TempData["BuySuccess"] = item.Name;
+            return RedirectToAction(nameof(List), new { userId });
         }
 
         [Route("/verify/{userId:guid}/{hash}")]

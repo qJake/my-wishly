@@ -1,8 +1,10 @@
-﻿@model (MyWishly.App.Models.User, IEnumerable<Item>)
+﻿@using System.Security.Claims
+@model (MyWishly.App.Models.User, IEnumerable<Item>)
 
 @{
     Layout = "_LayoutEmpty";
     ViewBag.BodyClass = "bg-light";
+    var selfVisit = Model.Item1.UserId.ToString() == User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
 <div class="container-lg">
@@ -11,13 +13,20 @@
             <h1 class="text-center display-3 my-5">@(Model.Item1.Name)'s Wishlist</h1>
         </div>
     </div>
+    @if (ViewBag.BuySuccess is string s)
+    {
+        <div class="alert alert-success" role="alert">
+            <i class="fas fa-check-circle fa-lg fa-fw"></i>
+            <strong>Success!</strong> We've marked the item "@s" as bought! Thank you!
+        </div>
+    }
     @if (!Model.Item2.Any())
     {
         <h3 class="text-center">There are no items currently on this wishlist.</h3>
     }
     else
     {
-        @foreach (var item in Model.Item2)
+        @foreach (var item in Model.Item2.Where(i => !i.IsBought || selfVisit))
         {
             <div class="row mb-5 shadow rounded p-3 bg-white">
                 <div class="col-6 d-flex justify-content-center">
@@ -42,12 +51,15 @@
                                 View Store Page
                             </a>
                         </div>
-                        <div>
-                            <a class="btn btn-primary" href="@item.PrimaryBuyLink" rel="nofollow" target="_blank">
-                                <i class="fas fa-check fa-fw"></i>
-                                I Bought This
-                            </a>
-                        </div>
+                        @if (!selfVisit)
+                        {
+                            <div>
+                                <a class="btn btn-primary" asp-action="BuyItem" asp-route-userId="@item.UserId" asp-route-itemId="@item.ItemId" rel="nofollow" target="_blank" onclick="return confirm('Are you sure you want to mark this item as bought? This action CANNOT be undone!')">
+                                    <i class="fas fa-check fa-fw"></i>
+                                    I Bought This
+                                </a>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
