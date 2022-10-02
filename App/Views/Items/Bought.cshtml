@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Item>
+
+@{
+    ViewBag.Title = "Bought Details | Wishly";
+}
+<div class="pagetitle">
+    <h1>Bought Details</h1>
+</div>
+
+@if (ViewBag.Unbuy is string s)
+{
+    <div class="alert alert-success" role="alert">
+        <i class="fas fa-check-circle fa-lg fa-fw"></i>
+        <strong>Success!</strong> Marked item "@s" as unbought.
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <p>Oh no! You don't have anything on your wishlist at this time.</p>
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create Your First Item</a>
+    </p>
+}
+else
+{
+    <p>
+        <a asp-action="Index" class="btn btn-primary">
+            <i class="fas fa-arrow-left fa-fw"></i>
+            Back to Items
+        </a>
+    </p>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th class="text-center">Image</th>
+                <th>Name</th>
+                <th>Bought</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="align-middle text-center">
+                        <img class="img-fluid" style="max-height: 48px;" src="@item.ImageUrl" alt="@item.Name product image" />
+                    </td>
+                    <td class="align-middle">
+                        @if (item.IsHidden)
+                        {
+                            <i class="far fa-eye-slash text-primary fa-fw" title="Hidden"></i>
+                        }
+                        @item.Name</td>
+                    <td class="align-middle">
+                        @if (item.IsBought)
+                        {
+                            <i class="fas fa-check-circle fa-2x text-success" title="Bought by IP @item.BoughtByIp at @item.BoughtTimeUtc"></i>
+                        }
+                        else
+                        {
+                            <i class="fas fa-circle-outline fa-2x text-muted"></i>
+                        }
+                    </td>
+                    <td class="align-middle">
+                        <a asp-action="Unbuy" asp-route-userId="@item.UserId" asp-route-itemId="@item.ItemId" class="btn @(item.IsBought ? "" : "disabled") btn-primary">
+                            <i class="fas fa-undo fa-fw"></i>
+                            Mark as Unbought
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

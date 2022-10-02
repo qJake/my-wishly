@@ -47,6 +47,42 @@ namespace MyWishly.App.Controllers
         }
 
         [HttpGet]
+        [Route("bought")]
+        public IActionResult BoughtSplash()
+        {
+            return View();
+        }
+        
+        [HttpGet]
+        [Route("bought/details")]
+        public async Task<IActionResult> Bought()
+        {
+            var items = await ItemsService.GetItemsForUser(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            if (TempData["Unbuy"] is string s)
+            {
+                ViewBag.Unbuy = s;
+            }
+            return View(items);
+        }
+
+        [HttpGet]
+        [Route("items/unbuy/{userId:guid}/{itemId:guid}")]
+        public async Task<IActionResult> Unbuy(Guid userId, Guid itemId)
+        {
+            var item = await ItemsService.GetItem(userId, itemId);
+            if (item is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            item.BoughtByIp = null;
+            item.BoughtTimeUtc = null;
+            item.IsBought = false;
+            await ItemsService.UpdateItem(item);
+            TempData["Unbuy"] = item.Name;
+            return RedirectToAction(nameof(Bought));
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
