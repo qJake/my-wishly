@@ -21,20 +21,26 @@
             <strong>Success!</strong> We've marked the item "@s" as bought! Thank you!
         </div>
     }
-    @if (!Model.Item2.Any())
+    @if (!Model.Item2.Where(i => selfVisit || (!i.IsHidden && !i.IsBought)).Any())
     {
         <h3 class="text-center">There are no items currently on this wishlist.</h3>
     }
     else
     {
-        @foreach (var item in Model.Item2.OrderBy(i => i.Order).Where(i => !i.IsBought || selfVisit))
+        @foreach (var item in Model.Item2.OrderBy(i => i.Order).Where(i => selfVisit || (!i.IsHidden && !i.IsBought)))
         {
-            <div class="row mb-5 shadow rounded p-3 bg-white">
+            <div class="row mb-5 shadow rounded p-3 @(selfVisit && item.IsHidden ? "bg-secondary bg-opacity-50" : "bg-white")">
                 <div class="col-6 d-flex justify-content-center">
                     <img src="@item.ImageUrl" alt="@item.Name product image" class="product-image text-center" />
                 </div>
                 <div class="col-6">
-                    <h2>@item.Name</h2>
+                    <h2>
+                        @item.Name
+                        @if (selfVisit && item.IsHidden)
+                        {
+                            <span class="badge rounded-pill text-bg-primary">Hidden</span>
+                        }
+                    </h2>
                     <div class="fs-5">
                         @Html.Raw(Markdig.Markdown.ToHtml(item.Description ?? ""))
                     </div>

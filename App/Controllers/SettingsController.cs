@@ -54,6 +54,10 @@ namespace MyWishly.App.Controllers
 
                     settings.FriendlyUrl = newSettings.FriendlyUrl;
                 }
+                else
+                {
+                    settings.FriendlyUrl = null;
+                }
 
                 settings.RowKey = userId;
 

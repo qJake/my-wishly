@@ -20,6 +20,7 @@
     <div class="row">
         <div class="col-xs-12 col-md-8 col-lg-6">
             <label asp-for="FriendlyUrl"></label>
+            <div class="invalid-feedback"><span asp-validation-for="FriendlyUrl"></span></div>
             <div class="input-group mb-3">
                 <span class="input-group-text" id="basic-addon3">https://wishly.site/l/</span>
                 <input asp-for="FriendlyUrl" class="form-control">

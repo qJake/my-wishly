@@ -37,7 +37,7 @@ namespace MyWishly.App.Services
         public async Task<Settings> UpsertSettings(Settings settings)
         {
             // Data cleanup / normalization
-            await TableClient.UpsertEntityAsync(settings);
+            await TableClient.UpsertEntityAsync(settings, TableUpdateMode.Replace);
 
             return settings;
         }

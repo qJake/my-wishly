@@ -49,7 +49,7 @@ namespace MyWishly.App.Controllers
                 }
                 var user = await AuthenticationService.GetUser(userId);
                 var items = await ItemsService.GetItemsForUser(userId);
-                return View((user, items.Where(i => !i.IsHidden)));
+                return View((user, items));
             }
             catch
             {
@@ -74,7 +74,7 @@ namespace MyWishly.App.Controllers
                 var userId = Guid.Parse(friendly.RowKey!);
                 var user = await AuthenticationService.GetUser(userId);
                 var items = await ItemsService.GetItemsForUser(userId);
-                return View((user, items.Where(i => !i.IsHidden)));
+                return View((user, items));
             }
             catch
             {

@@ -10,18 +10,23 @@ namespace MyWishly.App.Controllers
     public class DashboardController : Controller
     {
         public IItemsService ItemsService { get; }
+        public ISettingsService SettingsService { get; }
 
-        public DashboardController(IItemsService itemsService)
+        public DashboardController(IItemsService itemsService, ISettingsService settingsService)
         {
             ItemsService = itemsService;
+            SettingsService = settingsService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var items = await ItemsService.GetItemsForUser(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)));
+            var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var items = await ItemsService.GetItemsForUser(userId);
+            var settings = await SettingsService.GetSettings(userId);
             return View(new DashboardViewModel
             {
-                ItemCount = items.Count()
+                ItemCount = items.Count(),
+                FriendlyUrl = !string.IsNullOrWhiteSpace(settings?.FriendlyUrl) ? settings?.FriendlyUrl : null
             });
         }
     }

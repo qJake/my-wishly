@@ -8,10 +8,22 @@
 <div class="pagetitle">
     <h1>Wishlist Dashboard</h1>
 </div>
+
 <p>You have @Model.ItemCount item@(Model.ItemCount == 1 ? "" : "s") on your wishlist.</p>
+
 <p>
-    <a href="/@User.FindFirstValue(ClaimTypes.NameIdentifier)" class="btn btn-primary">
-        View Your Public Wishlist
-        <i class="fas fa-external-link fa-fw"></i>
-    </a>
+    @if (Model.FriendlyUrl is not null)
+    {
+        <a href="/l/@Model.FriendlyUrl" class="btn btn-primary">
+            View Your Public Wishlist
+            <i class="fas fa-external-link fa-fw"></i>
+        </a>
+    }
+    else
+    {
+        <a href="/@User.FindFirstValue(ClaimTypes.NameIdentifier)" class="btn btn-primary">
+            View Your Public Wishlist
+            <i class="fas fa-external-link fa-fw"></i>
+        </a>
+    }
 </p>
