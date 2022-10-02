@@ -12,7 +12,12 @@ builder.Host.ConfigureAppConfiguration(b =>
     {
         options.Connect(builder.Configuration.GetConnectionString("AppConfig"))
                .Select(KeyFilter.Any, LabelFilter.Null)
-               .Select(KeyFilter.Any, builder.Environment.EnvironmentName);
+               .Select(KeyFilter.Any, builder.Environment.EnvironmentName)
+               .ConfigureRefresh(refresh =>
+               {
+                   refresh.Register("Sentinel", refreshAll: true)
+                          .SetCacheExpiration(new TimeSpan(0, 15, 0));
+               });
     });
 });
 
