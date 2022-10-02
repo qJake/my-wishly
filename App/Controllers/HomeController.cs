@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using MyWishly.App.Models;
 using MyWishly.App.Models.Exceptions;
 using MyWishly.App.Services;
+using MyWishly.App.Utilities;
 using MyWishly.App.ViewModels;
 using System.Security.Claims;
 
@@ -17,12 +17,14 @@ namespace MyWishly.App.Controllers
         public IAuthService AuthenticationService { get; }
         public ICryptographyService CryptographyService { get; }
         public IItemsService ItemsService { get; }
+        public IMailService MailService { get; }
 
-        public HomeController(IAuthService authenticationService, ICryptographyService cryptographyService, IItemsService itemsService)
+        public HomeController(IAuthService authenticationService, ICryptographyService cryptographyService, IItemsService itemsService, IMailService mailService)
         {
             AuthenticationService = authenticationService;
             CryptographyService = cryptographyService;
             ItemsService = itemsService;
+            MailService = mailService;
         }
 
         public IActionResult Index()
@@ -41,7 +43,7 @@ namespace MyWishly.App.Controllers
             {
                 var user = await AuthenticationService.GetUser(userId);
                 var items = await ItemsService.GetItemsForUser(userId);
-                return View((user, items));
+                return View((user, items.Where(i => !i.IsHidden)));
             }
             catch
             {
@@ -49,11 +51,38 @@ namespace MyWishly.App.Controllers
             }
         }
 
+        [Route("/verify/{userId:guid}/{hash}")]
+        public async Task<IActionResult> VerifyEmail(Guid userId, string hash)
+        {
+            var user = await AuthenticationService.GetUser(userId);
+            if (user is null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            if (user.EmailVerificationToken == hash)
+            {
+                if (user.IsVerified)
+                {
+                    return RedirectToAction("Login");
+                }
+                user.IsVerified = true;
+                await AuthenticationService.UpdateUser(user);
+                TempData["EmailVerified"] = true;
+                return RedirectToAction("Login");
+            }
+            return RedirectToAction("Index");
+        }
+
         public IActionResult Login()
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
                 return RedirectToAction("Index", "Dashboard");
+            }
+            if (TempData["EmailVerified"] is bool b && b)
+            {
+                ViewBag.EmailVerified = true;
             }
             return View();
         }
@@ -94,10 +123,20 @@ namespace MyWishly.App.Controllers
                     throw new LoginException($"Username '{login.Username}' was not found.");
                 }
 
+                if (!user.IsVerified)
+                {
+                    throw new UnverifiedEmailException();
+                }
+
                 if (!await CryptographyService.CheckPassword(user.PasswordHash!, login.Password!, user.CreatedUtc))
                 {
                     throw new LoginException($"Invalid password for '{login.Username}'.");
                 }
+            }
+            catch (UnverifiedEmailException)
+            {
+                ModelState.AddModelError(nameof(LoginViewModel.Username), "You'll need to verify your e-mail before you can log in.");
+                return View(login);
             }
             catch 
             {
@@ -151,14 +190,17 @@ namespace MyWishly.App.Controllers
 
                 var created = DateTimeOffset.Now;
 
-                await AuthenticationService.RegisterUser(new User
+                var newUser = await AuthenticationService.RegisterUser(new User
                 {
                      Email = user.Email,
                      Name = user.Name,
                      PasswordHash = await CryptographyService.HashPassword(user.Password!, created),
                      CreatedUtc = created,
-                     CreatedIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString()
+                     CreatedIpAddress = HttpContext.Connection.RemoteIpAddress?.ToString(),
+                     EmailVerificationToken = RandomUtils.GetRandomString(64)
                 });
+
+                await MailService.SendVerificationEmail(newUser.Email!, $"https://wishly.site/verify/{newUser.UserId}/{newUser.EmailVerificationToken}");
 
                 TempData["UserRegistered"] = true;
                 return RedirectToAction(nameof(Index));

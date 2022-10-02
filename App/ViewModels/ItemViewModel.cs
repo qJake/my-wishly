@@ -9,8 +9,12 @@ namespace MyWishly.App.ViewModels
         public string? Name { get; set; }
 
         [Required]
-        [Display(Name = "Product Price")]
+        [Display(Name = "Current Price")]
         public double Price { get; set; }
+
+        [Required]
+        [Display(Name = "Maximum Price")]
+        public double PriceMax { get; set; }
 
         [Required]
         [Display(Name = "Primary Buy Link")]
@@ -23,6 +27,9 @@ namespace MyWishly.App.ViewModels
         [Display(Name = "Primary Product Image")]
         [DataType(DataType.Upload)]
         public IFormFile? Image { get; set; }
+
+        [Display(Name = "Hide from Public Wishlist")]
+        public bool IsHidden { get; set; }
 
         public string? PreviousImageUrl { get; set; }
     }

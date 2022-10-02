@@ -13,6 +13,7 @@ builder.Host.ConfigureAppConfiguration(b =>
 builder.Services.AddOptions();
 builder.Services.Configure<Connections>(builder.Configuration.GetSection(nameof(Connections)));
 builder.Services.Configure<Cryptography>(builder.Configuration.GetSection(nameof(Cryptography)));
+builder.Services.Configure<SmtpSettings>(builder.Configuration.GetSection(nameof(SmtpSettings)));
 
 builder.Services.AddAzureAppConfiguration();
 
@@ -20,6 +21,7 @@ builder.Services.AddSingleton<ICryptographyService, CryptographyService>();
 builder.Services.AddSingleton<IAuthService, AuthService>();
 builder.Services.AddSingleton<IItemsService, ItemsService>();
 builder.Services.AddSingleton<IImageService, ImageService>();
+builder.Services.AddSingleton<IMailService, MailService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>

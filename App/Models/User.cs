@@ -15,6 +15,7 @@ namespace MyWishly.App.Models
         public string? FriendlyUrl { get; set; }
         public string? Email { get => RowKey; set => RowKey = value; }
         public string? PasswordHash { get; set; }
+        public string? EmailVerificationToken { get; set; }
         public bool IsVerified { get; set; }
         public DateTimeOffset CreatedUtc { get; set; }
         public string? CreatedIpAddress { get; set; }

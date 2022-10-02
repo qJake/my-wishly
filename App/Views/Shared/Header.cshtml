@@ -14,7 +14,7 @@
             <div class="text-end">
                 @if (User.Identity?.IsAuthenticated ?? false)
                 {
-                    <span>Hi, @User.Identity.Name!</span>
+                    <span class="align-middle">Hi, @User.Identity.Name!</span>
                     <a asp-action="Index" asp-controller="Dashboard" class="btn btn-primary ms-2">View Dashboard</a>
                 }
                 else

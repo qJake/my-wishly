@@ -1,7 +1,14 @@
 @using System.Security.Claims
+@model DashboardViewModel
+
+@{
+    ViewBag.Title = "Dashboard | My Wishly";
+}
+
 <div class="pagetitle">
     <h1>Wishlist Dashboard</h1>
 </div>
+<p>You have @Model.ItemCount item@(Model.ItemCount == 1 ? "" : "s") on your wishlist.</p>
 <p>
     <a href="/@User.FindFirstValue(ClaimTypes.NameIdentifier)" class="btn btn-primary">
         View Your Public Wishlist

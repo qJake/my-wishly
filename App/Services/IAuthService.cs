@@ -6,6 +6,7 @@ namespace MyWishly.App.Services
     {
         Task<User> GetUser(string email);
         Task<User> GetUser(Guid userId);
-        Task RegisterUser(User newUser);
+        Task<User> RegisterUser(User newUser);
+        Task<User> UpdateUser(User user);
     }
 }

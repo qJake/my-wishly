@@ -15,7 +15,14 @@
                 <input asp-for="Name" class="form-control" placeholder="Name" />
                 <label asp-for="Name"></label>
             </div>
-            
+
+            <div class="col-8">
+                <div class="form-check form-control-lg">
+                    <input asp-for="IsHidden" class="form-check-input">
+                    <label asp-for="IsHidden" class="form-check-label"></label>
+                </div>
+            </div>
+
             <div class="col-4">
                 <div class="invalid-feedback"><span asp-validation-for="Price"></span></div>
                 <div class="input-group mb-3">
@@ -26,7 +33,18 @@
                     </div>
                 </div>
             </div>
-            
+
+            <div class="col-4">
+                <div class="invalid-feedback"><span asp-validation-for="PriceMax"></span></div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">$</span>
+                    <div class="form-floating">
+                        <input asp-for="PriceMax" class="form-control" placeholder="1.00">
+                        <label asp-for="PriceMax"></label>
+                    </div>
+                </div>
+            </div>
+
             <div class="invalid-feedback"><span asp-validation-for="PurchaseUrl"></span></div>
             <div class="form-floating mb-3">
                 <input asp-for="PurchaseUrl" class="form-control" placeholder="Name" />
@@ -39,6 +57,11 @@
                 <label asp-for="Description"></label>
             </div>
             <div class="mb-3"><em>Supports Markdown!</em></div>
+
+            <div class="col-4">
+                <input asp-for="IsHidden" class="form-control">
+                <label asp-for="IsHidden"></label>
+            </div>
         </div>
         <div class="col-6">
             <div class="invalid-feedback"><span asp-validation-for="Image"></span></div>

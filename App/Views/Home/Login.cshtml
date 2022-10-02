@@ -43,6 +43,15 @@
 </style>
 
 <main class="form-signin w-100 m-auto">
+
+    @if (ViewBag.EmailVerified is bool b && b)
+    {
+        <div class="alert alert-success" role="alert">
+            <i class="fas fa-check-circle fa-lg fa-fw"></i>
+            <strong>Email verified!</strong> You may now log in.
+        </div>
+    }
+
     <form asp-action="Login" asp-antiforgery="true" method="post">
         <img class="mb-4" src="~/images/logoBlk.svg" alt="My Wishly Logo" width="72" height="57">
         <h1 class="h2 mb-3 fw-normal">My Wishly</h1>

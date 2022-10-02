@@ -2,37 +2,60 @@
 
 @{
     Layout = "_LayoutEmpty";
+    ViewBag.BodyClass = "bg-light";
 }
 
 <div class="container-lg">
-    <h1 class="text-center my-5">@(Model.Item1.Name)'s Wishlist</h1>
-
+    <div class="row">
+        <div class="col">
+            <h1 class="text-center display-3 my-5">@(Model.Item1.Name)'s Wishlist</h1>
+        </div>
+    </div>
     @if (!Model.Item2.Any())
     {
         <h3 class="text-center">There are no items currently on this wishlist.</h3>
     }
     else
     {
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-            @foreach (var item in Model.Item2)
-            {
-                <div class="col">
-                    <div class="card">
-                        <img src="@item.ImageUrl" alt="@item.Name product image" class="img-fluid" />
-                        <div class="card-body">
-                            <h5>@item.Name</h5>
-                            <p>@item.Description</p>
+        @foreach (var item in Model.Item2)
+        {
+            <div class="row mb-5 shadow rounded p-3 bg-white">
+                <div class="col-6 d-flex justify-content-center">
+                    <img src="@item.ImageUrl" alt="@item.Name product image" class="product-image text-center" />
+                </div>
+                <div class="col-6">
+                    <h2>@item.Name</h2>
+                    <div class="fs-5">
+                        @Html.Raw(Markdig.Markdown.ToHtml(item.Description ?? ""))
+                    </div>
+                    <div class="vstack gap-2">
+                        <div class="d-flex align-items-center">
+                            <span class="text-success fs-3 align-middle">@item.Price.ToString("C2")</span>
+                            @if (@item.PriceMax > 0)
+                            {
+                                <small class="ms-3"><abbr class="initialism" title="Do Not Pay Above">DNPA</abbr>: @item.PriceMax.ToString("C2")</small>
+                            }
                         </div>
-                        <div class="card-footer">
-                            <span class="text-muted align-middle">@item.Price.ToString("C2")</span>
-                            <a class="btn btn-success float-end" href="@item.PrimaryBuyLink" rel="nofollow" target="_blank">
-                                Buy
-                                <i class="fas fa-arrow-right fa-fw"></i>
+                        <div>
+                            <a class="btn btn-success" href="@item.PrimaryBuyLink" rel="nofollow" target="_blank">
+                                <i class="fas fa-shopping-bag fa-fw"></i>
+                                View Store Page
+                            </a>
+                        </div>
+                        <div>
+                            <a class="btn btn-primary" href="@item.PrimaryBuyLink" rel="nofollow" target="_blank">
+                                <i class="fas fa-check fa-fw"></i>
+                                I Bought This
                             </a>
                         </div>
                     </div>
                 </div>
-            }
-        </div>
+            </div>
+        }
     }
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <small>&copy; @(DateTime.Now.Year) My Wishly. All rights reserved.</small>
+        </div>
+    </div>
 </div>

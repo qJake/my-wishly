@@ -62,7 +62,7 @@ else
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Image</th>
+                <th class="text-center">Image</th>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Primary Link</th>
@@ -73,12 +73,24 @@ else
             @foreach (var item in Model)
             {
                 <tr>
-                    <td class="align-middle">
+                    <td class="align-middle text-center">
                         <img class="img-fluid" style="max-height: 48px;" src="@item.ImageUrl" alt="@item.Name product image" />
                     </td>
-                    <td class="align-middle">@item.Name</td>
-                    <td class="align-middle">@item.Price.ToString("C2")</td>
-                    <td class="align-middle">@item.PrimaryBuyLink</td>
+                    <td class="align-middle">
+                        @if (item.IsHidden)
+                        {
+                            <i class="far fa-eye-slash text-primary fa-fw" title="Hidden"></i>
+                        }
+                        @item.Name</td>
+                    <td class="align-middle">
+                        @item.Price.ToString("C2")<br />
+                        <small><abbr class="initialism" title="Do Not Pay Above">DNPA</abbr> @item.PriceMax.ToString("C2")</small>
+                    </td>
+                    <td class="align-middle">
+                        <a href="@item.PrimaryBuyLink" target="_blank" rel="nofollow">
+                            @item.PrimaryBuyLink <i class="fas fa-external-link fa-fw fa-sm"></i>
+                        </a>
+                    </td>
                     <td class="align-middle">
                         <a asp-action="Edit" asp-route-itemId="@item.ItemId" class="btn btn-warning">
                             <i class="fas fa-pencil fa-fw"></i>

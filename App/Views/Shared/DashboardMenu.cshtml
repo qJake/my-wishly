@@ -1,42 +1,57 @@
-﻿<aside id="sidebar" class="sidebar">
+﻿@{
+    string CollapseNotThisController(string controller)
+    {
+        return controller.ToUpper() == ViewContext.RouteData.Values["Controller"]!.ToString()!.ToUpper()
+                ? "" : "collapsed";
+    }
+}
+
+<aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
-
-        <li class="nav-item">
-            <a class="nav-link" asp-action="Index" asp-controller="Dashboard">
-                <i class="bi bi-grid"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
 
         <li class="nav-heading">My Wishlist</li>
 
         <li class="nav-item">
-            <a asp-action="Index" asp-controller="Items" class="nav-link collapsed">
-                <i class="bi bi-person"></i>
+            <a asp-action="Index" asp-controller="Dashboard" class="nav-link @(CollapseNotThisController("Dashboard"))">
+                <i class="fas fa-fw fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a asp-action="Index" asp-controller="Items" class="nav-link  @(CollapseNotThisController("Items"))">
+                <i class="fas fa-fw fa-box-open"></i>
                 <span>Items</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-faq.html">
-                <i class="bi bi-question-circle"></i>
+            <a asp-action="Index" asp-controller="Dashboard" class="nav-link  @(CollapseNotThisController("Arrange"))">
+                <i class="fas fa-fw fa-arrow-down-1-9"></i>
                 <span>Arrange</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-contact.html">
-                <i class="bi bi-envelope"></i>
+            <a asp-action="Index" asp-controller="Dashboard" class="nav-link  @(CollapseNotThisController("Design"))">
+                <i class="fas fa-fw fa-paintbrush"></i>
                 <span>Design</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a asp-action="Index" asp-controller="Dashboard" class="nav-link  @(CollapseNotThisController("Settings"))">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Settings</span>
             </a>
         </li>
 
         <li class="nav-heading">Support</li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="pages-login.html">
-                <i class="bi bi-box-arrow-in-right"></i>
+            <a class="nav-link collapsed" href="https://github.com/qjake/my-wishly" rel="nofollow" target="_blank">
+                <i class="fab fa-github"></i>
                 <span>GitHub</span>
             </a>
         </li>

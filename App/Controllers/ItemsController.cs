@@ -65,7 +65,9 @@ namespace MyWishly.App.Controllers
                     Description = item.Description,
                     PurchaseUrl = item.PrimaryBuyLink,
                     Price = item.Price,
-                    PreviousImageUrl = item.ImageUrl
+                    PreviousImageUrl = item.ImageUrl,
+                    PriceMax = item.PriceMax,
+                    IsHidden = item.IsHidden
                 });
             }
             catch
@@ -96,20 +98,18 @@ namespace MyWishly.App.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (item.Image is null)
-                {
-                    ModelState.AddModelError(nameof(item.Image), "Product image is required.");
-                    return View(item);
-                }
-
                 var existingItem = await ItemsService.GetItem(Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)), itemId);
 
                 var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                string url;
-                using (var ms = new MemoryStream())
+                
+                string? newUrl = existingItem.ImageUrl;
+                if (item.Image is not null)
                 {
-                    await item.Image.CopyToAsync(ms);
-                    url = await ImageService.UploadProductImage(userId, ms.ToArray(), Path.GetExtension(item.Image.FileName));
+                    using (var ms = new MemoryStream())
+                    {
+                        await item.Image.CopyToAsync(ms);
+                        newUrl = await ImageService.UploadProductImage(userId, ms.ToArray(), Path.GetExtension(item.Image.FileName));
+                    }
                 }
 
                 existingItem.Name = item.Name;
@@ -117,7 +117,9 @@ namespace MyWishly.App.Controllers
                 existingItem.Price = item.Price;
                 existingItem.PrimaryBuyLink = item.PurchaseUrl;
                 existingItem.UpdatedUtc = DateTimeOffset.UtcNow;
-                existingItem.ImageUrl = url;
+                existingItem.ImageUrl = newUrl;
+                existingItem.PriceMax = item.PriceMax;
+                existingItem.IsHidden = item.IsHidden;
                 
                 await ItemsService.UpdateItem(existingItem);
 
@@ -154,9 +156,11 @@ namespace MyWishly.App.Controllers
                     Description = newItem.Description,
                     Name = newItem.Name,
                     Price = newItem.Price,
+                    PriceMax = newItem.PriceMax,
                     UserId = userId,
                     PrimaryBuyLink = newItem.PurchaseUrl,
-                    ImageUrl = url
+                    ImageUrl = url,
+                    IsHidden = newItem.IsHidden
                 };
 
                 await ItemsService.CreateItem(item);

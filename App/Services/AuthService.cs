@@ -21,7 +21,7 @@ namespace MyWishly.App.Services
             TableClient.CreateIfNotExists();
         }
 
-        public async Task RegisterUser(User newUser)
+        public async Task<User> RegisterUser(User newUser)
         {
             // Data cleanup / normalization
             newUser.CreatedUtc = DateTimeOffset.Now;
@@ -30,6 +30,8 @@ namespace MyWishly.App.Services
             newUser.UserId = Guid.NewGuid();
 
             await TableClient.AddEntityAsync(newUser);
+
+            return newUser;
         }
 
         public async Task<User> GetUser(string email)
@@ -42,6 +44,19 @@ namespace MyWishly.App.Services
             catch (RequestFailedException rex) when (rex.Status == 404)
             {
                 throw new UserNotFoundException(email);
+            }
+        }
+
+        public async Task<User> UpdateUser(User user)
+        {
+            try
+            {
+                var resp = await TableClient.UpdateEntityAsync(user, ETag.All, TableUpdateMode.Replace);
+                return user;
+            }
+            catch (RequestFailedException rex) when (rex.Status == 404)
+            {
+                throw new UserNotFoundException(user.Email!);
             }
         }
 
