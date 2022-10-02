@@ -49,7 +49,7 @@ namespace MyWishly.App.Controllers
                     if (existingUrl is not null && existingUrl.RowKey != userId)
                     {
                         ModelState.AddModelError(nameof(SettingsViewModel.FriendlyUrl), "That URL is already taken, please choose a different one!");
-                        return View(nameof(Index));
+                        return View(nameof(Index), newSettings);
                     }
 
                     settings.FriendlyUrl = newSettings.FriendlyUrl;
@@ -61,7 +61,7 @@ namespace MyWishly.App.Controllers
                 TempData["SettingsSaved"] = true;
                 return RedirectToAction(nameof(Index));
             }
-            return View(newSettings);
+            return View(nameof(Index), newSettings);
         }
     }
 }
