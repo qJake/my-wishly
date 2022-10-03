@@ -6,12 +6,14 @@
     ViewBag.BodyClass = "bg-light";
     ViewBag.Title = Model.Item1.Name + "'s Wishlist on My Wishly";
     var selfVisit = Model.Item1.UserId.ToString() == User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+    var itemList = Model.Item2.OrderBy(i => i.Order).Where(i => selfVisit || (!i.IsHidden && !i.IsBought));
 }
 
 <div class="container-lg">
     <div class="row">
         <div class="col">
-            <h1 class="text-center display-3 my-5">@(Model.Item1.Name)'s Wishlist</h1>
+            <h1 class="text-center display-3 mt-5 mb-3">@(Model.Item1.Name)'s Wishlist</h1>
         </div>
     </div>
     @if (ViewBag.BuySuccess is string s)
@@ -21,20 +23,22 @@
             <strong>Success!</strong> We've marked the item "@s" as bought! Thank you!
         </div>
     }
-    @if (!Model.Item2.Where(i => selfVisit || (!i.IsHidden && !i.IsBought)).Any())
+    @if (!itemList.Any())
     {
         <h3 class="text-center">There are no items currently on this wishlist.</h3>
     }
     else
     {
-        @foreach (var item in Model.Item2.OrderBy(i => i.Order).Where(i => selfVisit || (!i.IsHidden && !i.IsBought)))
+        <p class="lead text-center fs-3 mb-5">@itemList.Count() item@(@itemList.Count() == 1 ? "" : "s") to choose from!</h1>
+
+        @foreach (var item in itemList)
         {
-            <div class="row mb-5 shadow rounded p-3 @(selfVisit && item.IsHidden ? "bg-secondary bg-opacity-50" : "bg-white")">
-                <div class="col-6 d-flex justify-content-center">
+            <div class="row row-cols-md-2 row-cols-1 mb-5 shadow rounded p-3 @(selfVisit && item.IsHidden ? "bg-secondary bg-opacity-50" : "bg-white")">
+                <div class="col d-flex justify-content-center">
                     <img src="@item.ImageUrl" alt="@item.Name product image" class="product-image text-center" />
                 </div>
-                <div class="col-6">
-                    <h2>
+                <div class="col">
+                    <h2 class="text-md-start text-center my-4 mt-md-0 mb-md-2">
                         @item.Name
                         @if (selfVisit && item.IsHidden)
                         {
@@ -44,8 +48,8 @@
                     <div class="fs-5">
                         @Html.Raw(Markdig.Markdown.ToHtml(item.Description ?? ""))
                     </div>
-                    <div class="vstack gap-2">
-                        <div class="d-flex align-items-center">
+                    <div class="vstack gap-2 text-md-start text-center">
+                        <div class="d-flex align-items-center justify-content-md-start justify-content-center">
                             <span class="text-success fs-3 align-middle">@item.Price.ToString("C2")</span>
                             @if (@item.PriceMax > 0)
                             {
@@ -74,7 +78,8 @@
     }
     <div class="row mb-5">
         <div class="col-12 text-center">
-            <small>&copy; @(DateTime.Now.Year) My Wishly. All rights reserved.</small>
+                <small>&copy; @(DateTime.Now.Year) <a asp-action="Index" asp-controller="Home" class="text-reset">My Wishly</a></small><br />
+                <small>Want your own wishlist? <a asp-action="Register" asp-controller="Home" class="text-reset">Sign up for free!</a></small>
         </div>
     </div>
 </div>
