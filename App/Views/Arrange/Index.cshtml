@@ -69,7 +69,6 @@ else
                 <th>Name</th>
                 <th>Price</th>
                 <th>Primary Link</th>
-                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -96,16 +95,6 @@ else
                     <td class="align-middle">
                         <a href="@item.PrimaryBuyLink" target="_blank" rel="nofollow">
                             @item.PrimaryBuyLink <i class="fas fa-external-link fa-fw fa-sm"></i>
-                        </a>
-                    </td>
-                    <td class="align-middle">
-                        <a asp-action="Edit" asp-route-itemId="@item.ItemId" class="btn btn-warning">
-                            <i class="fas fa-pencil fa-fw"></i>
-                            Edit
-                        </a>
-                        <a asp-action="Delete" asp-route-itemId="@item.ItemId" class="btn btn-danger">
-                            <i class="fas fa-trash fa-fw"></i>
-                            Delete
                         </a>
                     </td>
                 </tr>
