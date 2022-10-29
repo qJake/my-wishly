@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" href="~/css/main.css" />
     <link href="~/dashboard/css/style.css" rel="stylesheet">
-
+    @await RenderSectionAsync("Head", false)
 </head>
 
 <body>
@@ -102,8 +102,6 @@
             Dashboard theme by <a href="https://bootstrapmade.com/">BootstrapMade</a>.
         </div>
     </footer>
-
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.1/js/bootstrap.bundle.min.js" integrity="sha512-1TK4hjCY5+E9H3r5+05bEGbKGyK506WaDPfPe1s/ihwRjr6OtL43zJLzOFQ+/zciONEd+sp7LwrfOCnyukPSsg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/dashboard/js/main.js"></script>

@@ -1,31 +1,32 @@
 ﻿@model IEnumerable<Item>
 
 @section scripts
-{
+    {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/TableDnD/1.0.5/jquery.tablednd.min.js" integrity="sha512-uzT009qnQ625C6M8eTX9pvhFJDn/YTYChW+YTOs9bZrcLN70Nhj82/by6yS9HG5TvjVnZ8yx/GTD+qUKyQ9wwQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        $(function()
-        {
-            $('#table-reorder').tableDnD(
-            {
-                onDragClass: 'table-info',
-                dragHandle: '.dragger',
-                onDragStop: function(table, row)
-                {
-                    let rows = [];
-                    for (let i = 1; i < table.rows.length; i++)
-                    {
-                        rows.push(table.rows[i].dataset['itemid']);
-                    }
-                    $('#newOrder').val(JSON.stringify(rows));
+        $(function () {
+            let saveOrder = function (table, row) {
+                let rows = [];
+                for (let i = 1; i < table.rows.length; i++) {
+                    rows.push(table.rows[i].dataset['itemid']);
                 }
-            });
+                $('#newOrder').val(JSON.stringify(rows));
+            };
+
+            $('#table-reorder').tableDnD(
+                {
+                    onDragClass: 'table-info',
+                    dragHandle: '.dragger',
+                    onDragStop: saveOrder
+                });
+
+            saveOrder($('#table-reorder').get(0));
         });
     </script>
 }
 
-@{
+    @{
     ViewBag.Title = "Arrange Items | My Wishly";
 }
 
@@ -50,54 +51,61 @@
 }
 else
 {
-    <p>
-        <form method="post" asp-action="SaveOrder" asp-antiforgery="true">
-            <input type="hidden" name="newOrder" id="newOrder" />
+    <form method="post" asp-action="SaveOrder" asp-antiforgery="true">
+        <input type="hidden" name="newOrder" id="newOrder" />
+        <p>
             <button type="submit" class="btn btn-success">
                 <i class="fas fa-check fa-fw"></i>
                 Save Order
             </button>
-        </form>
-    </p>
+        </p>
 
-    <table class="table table-striped" id="table-reorder">
-        <thead>
-            <tr>
-                <th></th>
-                <th class="text-center">Image</th>
-                <th>Name</th>
-                <th>Price</th>
-                <th>Primary Link</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.OrderBy(i => i.Order))
-            {
-                <tr data-itemid="@item.ItemId">
-                    <td class="dragger align-middle" style="cursor: grab;">
-                        <i class="fas fa-grip-vertical fa-lg mx-2"></i>
-                    </td>
-                    <td class="align-middle text-center">
-                        <img class="img-fluid" style="max-height: 48px;" src="@item.ImageUrl" alt="@item.Name product image" />
-                    </td>
-                    <td class="align-middle">
-                        @if (item.IsHidden)
-                        {
-                            <i class="far fa-eye-slash text-primary fa-fw" title="Hidden"></i>
-                        }
-                        @item.Name
-                    </td>
-                    <td class="align-middle">
-                        @item.Price.ToString("C2")<br />
-                        <small><abbr class="initialism" title="Do Not Pay Above">DNPA</abbr> @item.PriceMax.ToString("C2")</small>
-                    </td>
-                    <td class="align-middle">
-                        <a href="@item.PrimaryBuyLink" target="_blank" rel="nofollow">
-                            @item.PrimaryBuyLink <i class="fas fa-external-link fa-fw fa-sm"></i>
-                        </a>
-                    </td>
+        <table class="table table-striped" id="table-reorder">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-center">Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Primary Link</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderBy(i => i.Order))
+                {
+                    <tr data-itemid="@item.ItemId">
+                        <td class="dragger align-middle" style="cursor: grab;">
+                            <i class="fas fa-grip-vertical fa-lg mx-2"></i>
+                        </td>
+                        <td class="align-middle text-center">
+                            <img class="img-fluid" style="max-height: 48px;" src="@item.ImageUrl" alt="@item.Name product image" />
+                        </td>
+                        <td class="align-middle">
+                            @if (item.IsHidden)
+                            {
+                                <i class="far fa-eye-slash text-primary fa-fw" title="Hidden"></i>
+                            }
+                            @item.Name
+                        </td>
+                        <td class="align-middle">
+                            @item.Price.ToString("C2")<br />
+                            <small><abbr class="initialism" title="Do Not Pay Above">DNPA</abbr> @item.PriceMax.ToString("C2")</small>
+                        </td>
+                        <td class="align-middle">
+                            <a href="@item.PrimaryBuyLink" target="_blank" rel="nofollow">
+                                @item.PrimaryBuyLink <i class="fas fa-external-link fa-fw fa-sm"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <p>
+            <button type="submit" class="btn btn-success">
+                <i class="fas fa-check fa-fw"></i>
+                Save Order
+            </button>
+        </p>
+    </form>
 }

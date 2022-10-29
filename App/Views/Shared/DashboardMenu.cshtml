@@ -20,28 +20,28 @@
         </li>
 
         <li class="nav-item">
-            <a asp-action="Index" asp-controller="Items" class="nav-link  @(CollapseNotThisController("Items"))">
+            <a asp-action="Index" asp-controller="Items" class="nav-link @(CollapseNotThisController("Items"))">
                 <i class="fas fa-fw fa-box-open"></i>
                 <span>Items</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a asp-action="Index" asp-controller="Arrange" class="nav-link  @(CollapseNotThisController("Arrange"))">
+            <a asp-action="Index" asp-controller="Arrange" class="nav-link @(CollapseNotThisController("Arrange"))">
                 <i class="fas fa-fw fa-arrow-down-1-9"></i>
                 <span>Arrange</span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a asp-action="Index" asp-controller="Dashboard" class="nav-link  @(CollapseNotThisController("Design"))">
+            <a asp-action="Index" asp-controller="Dashboard" class="nav-link disabled @(CollapseNotThisController("Design"))">
                 <i class="fas fa-fw fa-paintbrush"></i>
-                <span>Design</span>
+                <span>Design <small>(Coming soon!)</small></span>
             </a>
         </li>
 
         <li class="nav-item">
-            <a asp-action="Index" asp-controller="Settings" class="nav-link  @(CollapseNotThisController("Settings"))">
+            <a asp-action="Index" asp-controller="Settings" class="nav-link @(CollapseNotThisController("Settings"))">
                 <i class="fas fa-fw fa-cog"></i>
                 <span>Settings</span>
             </a>
